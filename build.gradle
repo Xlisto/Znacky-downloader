@@ -1,0 +1,50 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'org.javamodularity.moduleplugin' version '1.8.12'
+  id 'org.openjfx.javafxplugin' version '0.0.13'
+  id 'org.beryx.jlink' version '2.25.0'
+  id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'cz.xlisto'
+version '1.0-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+ext {
+  junitVersion = '5.10.0'
+}
+
+
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+}
+
+application {
+  mainModule = 'cz.xlisto.znacky'
+  mainClass = 'cz.xlisto.znacky.ZnackyLauncher'
+}
+
+javafx {
+  version = '21'
+  modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+  //parsování html
+  implementation 'org.jsoup:jsoup:1.16.1'
+
+  //logy
+  implementation 'org.slf4j:slf4j-api:1.7.32'
+  implementation 'ch.qos.logback:logback-classic:1.4.14'
+
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+}
+
+test {
+useJUnitPlatform()}
+

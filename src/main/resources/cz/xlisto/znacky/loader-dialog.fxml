@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@/cz/xlisto/znacky/loader-dialog.css">
+   <center>
+       <VBox alignment="CENTER" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0"
+             prefWidth="150.0" spacing="10.0" styleClass="loader-dialog">
+           <ProgressIndicator fx:id="progressIndicator"/>
+           <Label text="Načítám obrázky...">
+            <padding>
+                <Insets top="15.0"/>
+            </padding>
+           </Label>
+       </VBox>
+   </center>
+</BorderPane>
