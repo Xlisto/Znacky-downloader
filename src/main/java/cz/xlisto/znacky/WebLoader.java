@@ -33,24 +33,36 @@ public class WebLoader {
 
     // Logger pro zaznamenávání chyb a informací během načítání webových stránek
     private static final Logger logger = LoggerFactory.getLogger(WebLoader.class);
-    // Vytvoření objektu třídy ParserHTML
-    private final ParserHTML parser = new ParserHTML();
+
+    private ParserHTML parser;
+
+    /**
+     * Konstruktor třídy WebLoader.
+     * <p>
+     * Inicializuje instanci třídy WebLoader s referencí na instanci ZnackyController.
+     * Tato reference je použita pro vytvoření instance ParserHTML, která je zodpovědná za parsování HTML obsahu.
+     *
+     * @param znackyController instance třídy ZnackyController, která je použita pro aktualizaci průběhu načítání.
+     */
+    public WebLoader(ZnackyController znackyController) {
+        this.parser = new ParserHTML(znackyController);
+    }
 
     /**
      * Metoda pro načtení obsahu webové stránky z dané URL.
+     * <p>
+     * Tato metoda provede následující kroky:
+     * <ol>
+     *   <li>Vytvoří objekt URL a otevře spojení.</li>
+     *   <li>Nastaví metodu požadavku na GET.</li>
+     *   <li>Načte odpověď z webové stránky pomocí BufferedReader.</li>
+     *   <li>Obsah stránky uloží do StringBuilderu.</li>
+     *   <li>Zavolá metodu parseHTML třídy ParserHTML s načteným obsahem stránky.</li>
+     *   <li>Pokud metoda parseHTML vrátí další URL, rekurzivně zavolá loadWeb s touto URL.</li>
+     *   <li>V případě chyby při načítání webu zapíše chybu do logu.</li>
+     * </ol>
      *
      * @param url URL adresa webové stránky, kterou chceme načíst.
-     *            <p>
-     *            Metoda provede následující kroky:
-     *            <ol>
-     *                <li>Vytvoří objekt URL a otevře spojení.
-     *                <li>Nastaví metodu požadavku na GET.
-     *                <li>Načte odpověď z webové stránky pomocí BufferedReader.
-     *                <li>Obsah stránky uloží do StringBuilderu.
-     *                <li>Zavolá metodu parseHTML třídy ParserHTML s načteným obsahem stránky.
-     *                <li>Pokud metoda parseHTML vrátí další URL, rekurzivně zavolá loadWeb s touto URL.
-     *                <li>V případě chyby při načítání webu zapíše chybu do logu.
-     *            </ol>
      */
     public void loadWeb(String url) {
         try {
@@ -72,6 +84,7 @@ public class WebLoader {
             in.close();
 
             // Zavolání metody parseHTML s načteným obsahem stránky
+
             String nextUrl = parser.parseHTML(response.toString());
             if (nextUrl != null) {
                 loadWeb(nextUrl);

@@ -6,16 +6,16 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@/cz/xlisto/znacky/loader-dialog.css">
+<BorderPane stylesheets="@/cz/xlisto/znacky/loader-dialog.css" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-       <VBox alignment="CENTER" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0"
-             prefWidth="150.0" spacing="10.0" styleClass="loader-dialog">
-           <ProgressIndicator fx:id="progressIndicator"/>
-           <Label text="Načítám obrázky...">
+       <VBox alignment="CENTER" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0" prefWidth="150.0" spacing="10.0" styleClass="loader-dialog">
+           <ProgressIndicator fx:id="progressIndicator" />
+           <Label text="Načítám odkazy...">
             <padding>
-                <Insets top="15.0"/>
+                <Insets top="15.0" />
             </padding>
            </Label>
+         <Label fx:id="progress"/>
        </VBox>
    </center>
 </BorderPane>

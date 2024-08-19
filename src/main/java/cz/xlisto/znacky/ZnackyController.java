@@ -28,6 +28,7 @@ import java.io.IOException;
  *   <li>Načítání obsahu webové stránky pomocí metody onLoadImgButtonClick.</li>
  *   <li>Zobrazení načítacího dialogu během načítání obsahu.</li>
  *   <li>Aktualizace ListView s nalezenými URL adresami po dokončení načítání.</li>
+ *   <li>Aktualizace průběhu načítání v labelu progress.</li>
  * </ul>
  * <p>
  * Třída využívá následující knihovny:
@@ -36,6 +37,7 @@ import java.io.IOException;
  *   <li>javafx.concurrent.Task pro asynchronní načítání obsahu.</li>
  *   <li>javafx.fxml.FXMLLoader pro načítání FXML souborů.</li>
  *   <li>javafx.scene.Scene a javafx.stage.Stage pro práci s okny a scénami.</li>
+ *   <li>javafx.scene.control.Label a javafx.scene.control.ListView pro práci s GUI komponentami.</li>
  *   <li>org.slf4j.Logger a org.slf4j.LoggerFactory pro logování.</li>
  * </ul>
  */
@@ -46,8 +48,23 @@ public class ZnackyController {
     public ListView<String> listView;
     @FXML
     private Label welcomeText;
+    @FXML
+    private Label progress;
     private WebLoader webLoader;
     private final String url = "http://www.celysvet.cz/test-znalosti-dopravnich-znacek-databaze";
+
+    /**
+     * Aktualizuje text v labelu progress s počtem načtených URL adres.
+     * <p>
+     * Tato metoda je volána z asynchronní úlohy, která načítá obsah webové stránky.
+     * Používá Platform.runLater() pro zajištění, že aktualizace GUI proběhne na JavaFX Application Thread.
+     * <p>
+     * Metoda získá aktuální počet URL adres v seznamu urlList z instance WebLoader
+     * a nastaví tento počet jako text v labelu progress.
+     */
+    public void updateProgress() {
+        Platform.runLater(() -> progress.setText("Načteno " + webLoader.getUrlList().size() + " odkazů"));
+    }
 
     /**
      * Metoda pro načtení obsahu webové stránky s dopravními značkami po kliknutí na tlačítko.
@@ -58,6 +75,7 @@ public class ZnackyController {
      *   <li>Nastaví text uvítacího labelu na "Načítám obsah webu".</li>
      *   <li>Vytvoří nové okno pro zobrazení načítacího dialogu.</li>
      *   <li>Načte FXML soubor pro načítací dialog a nastaví scénu pro nové okno.</li>
+     *   <li>Získá referenci na label progress pro zobrazení průběhu načítání.</li>
      *   <li>Vycentruje načítací dialog na hlavní okno aplikace.</li>
      *   <li>Zobrazí načítací dialog.</li>
      *   <li>Vytvoří a spustí asynchronní úlohu pro načítání obsahu webové stránky.</li>
@@ -67,7 +85,7 @@ public class ZnackyController {
      */
     @FXML
     protected void onLoadImgButtonClick() {
-        webLoader = new WebLoader();
+        webLoader = new WebLoader(this);
         welcomeText.setText("Načítám obsah webu");
 
         // Vytvoří nové okno pro zobrazení načítání
@@ -79,6 +97,9 @@ public class ZnackyController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("loader-dialog.fxml"));
             Scene scene = new Scene(loader.load());
             loaderStage.setScene(scene);
+
+            // Získat referenci na progress label
+            this.progress = (Label) scene.lookup("#progress");
         } catch (IOException e) {
             logger.error("Chyba při načítání loader-dialog.fxml {}", e.getMessage());
             return;
