@@ -42,8 +42,14 @@ import java.io.IOException;
  * </ul>
  */
 public class ZnackyController {
-    // Inicializace loggeru pro tuto třídu
+    // Logger pro zaznamenávání chyb a informací během načítání webových stránek
     private static final Logger logger = LoggerFactory.getLogger(ZnackyController.class);
+    /**
+     * ListView pro zobrazení nalezených URL adres.
+     * <p>
+     * Tato komponenta je inicializována pomocí FXML a slouží k zobrazení seznamu URL adres
+     * nalezených na webové stránce s dopravními značkami.
+     */
     @FXML
     public ListView<String> listView;
     @FXML
@@ -52,6 +58,15 @@ public class ZnackyController {
     private Label progress;
     private WebLoader webLoader;
     private final String url = "http://www.celysvet.cz/test-znalosti-dopravnich-znacek-databaze";
+
+    /**
+     * Prázdný konstruktor třídy ZnackyController.
+     * <p>
+     * Tento konstruktor nevykonává žádné akce a je zde pouze pro případné budoucí rozšíření.
+     */
+    public ZnackyController() {
+        // Prázdný konstruktor
+    }
 
     /**
      * Aktualizuje text v labelu progress s počtem načtených URL adres.

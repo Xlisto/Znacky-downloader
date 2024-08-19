@@ -34,7 +34,7 @@ public class WebLoader {
     // Logger pro zaznamenávání chyb a informací během načítání webových stránek
     private static final Logger logger = LoggerFactory.getLogger(WebLoader.class);
 
-    private ParserHTML parser;
+    private final ParserHTML parser;
 
     /**
      * Konstruktor třídy WebLoader.
