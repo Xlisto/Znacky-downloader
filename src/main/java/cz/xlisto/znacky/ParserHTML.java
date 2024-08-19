@@ -7,13 +7,46 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/**
+ * Třída ParserHTML slouží k parsování HTML obsahu a extrahování URL adres z &lt;img&gt; tagů.
+ * <p>
+ * Tato třída poskytuje metodu pro parsování HTML obsahu a získání seznamu URL adres
+ * nalezených v &lt;img&gt; tagách. Dále umožňuje zjistit, zda existuje další stránka k načtení.
+ * <p>
+ * Hlavní funkce třídy:
+ * <ul>
+ *   <li>Parsování HTML obsahu pomocí metody parseHTML.</li>
+ *   <li>Získání seznamu URL adres nalezených v &lt;img&gt; tagách pomocí metody getUrlList.</li>
+ * </ul>
+ * <p>
+ * Třída využívá následující knihovny:
+ * <ul>
+ *   <li>org.jsoup.Jsoup pro parsování HTML obsahu.</li>
+ *   <li>javafx.collections.FXCollections a javafx.collections.ObservableList pro práci se seznamem URL adres.</li>
+ * </ul>
+ */
 public class ParserHTML {
     // Základní URL
     String baseUrl = "http://www.celysvet.cz/";
 
-    // ObservableList všech nalezených URL
+    // Seznam všech nalezených URL adres
     private final ObservableList<String> urlList = FXCollections.observableArrayList();
 
+    /**
+     * Metoda pro parsování HTML obsahu a extrahování URL adres z &lt;img&gt; tagů.
+     *
+     * @param html HTML obsah, který má být parsován.
+     * @return URL adresa další stránky k načtení, pokud existuje, jinak null.
+     * <p>
+     * Metoda provede následující kroky:
+     * <ol>
+     *   <li>Parsování HTML obsahu pomocí knihovny Jsoup.</li>
+     *   <li>Výběr všech &lt;img&gt; tagů a extrahování hodnot atributu src.</li>
+     *   <li>Přidání nalezených URL adres do seznamu urlList.</li>
+     *   <li>Vyhledání odkazu na další stránku pomocí textu "další :".</li>
+     *   <li>Pokud je nalezen odkaz na další stránku, vrátí jeho URL adresu, jinak vrátí null.</li>
+     * </ol>
+     */
     public String parseHTML(String html) {
 
         // Parsování HTML obsahu
@@ -47,7 +80,11 @@ public class ParserHTML {
     }
 
 
-    // Vrátí ObservableList URL adres
+    /**
+     * Metoda pro získání seznamu URL adres nalezených v &lt;img&gt; tagách.
+     *
+     * @return ObservableList obsahující URL adresy nalezené v &lt;img&gt; tagách.
+     */
     public ObservableList<String> getUrlList() {
         return urlList;
     }
