@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"cz.xlisto.znacky","l":"CustomListCell"},{"p":"cz.xlisto.znacky","l":"ParserHTML"},{"p":"cz.xlisto.znacky","l":"WebLoader"},{"p":"cz.xlisto.znacky","l":"ZnackyApplication"},{"p":"cz.xlisto.znacky","l":"ZnackyController"},{"p":"cz.xlisto.znacky","l":"ZnackyLauncher"}];updateSearchResults();
