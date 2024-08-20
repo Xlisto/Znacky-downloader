@@ -28,10 +28,20 @@ import org.jsoup.select.Elements;
  * </ul>
  */
 public class ParserHTML {
+    /**
+     * Reference na instanci třídy ZnackyController, která je použita pro aktualizaci průběhu načítání.
+     */
     private final ZnackyController znackyController;
 
-    // Seznam všech nalezených URL adres
-    private final ObservableList<String> urlList = FXCollections.observableArrayList();
+    /**
+     * Seznam všech nalezených URL adres.
+     * <p>
+     * Tato proměnná obsahuje seznam URL adres, které byly nalezeny v &lt;img&gt; tagách
+     * během parsování HTML obsahu. Seznam je implementován jako ObservableList, což
+     * umožňuje sledování změn v seznamu.
+     */
+    private final ObservableList<String[]> urlList = FXCollections.observableArrayList();
+
     /**
      * Konstruktor třídy ParserHTML.
      * <p>
@@ -44,7 +54,12 @@ public class ParserHTML {
         this.znackyController = znackyController;
     }
 
-    // Základní URL
+    /**
+     * Základní URL pro načítání stránek.
+     * <p>
+     * Tato proměnná obsahuje základní URL adresu, která je použita jako výchozí bod
+     * pro kombinaci s relativními cestami nalezenými během parsování HTML obsahu.
+     */
     String baseUrl = "http://www.celysvet.cz/";
 
     /**
@@ -71,8 +86,14 @@ public class ParserHTML {
         Elements imgTags = doc.select("img");
 
         // Přidání všech URL do ObservableList
+        // Pro každý <img> tag v seznamu imgTags:
+        // 1. Získá hodnotu atributu "alt" a odstraní z ní text "Dopravní značka:", poté ořízne bílé znaky.
+        // 2. Přidá do seznamu urlList nový řetězec obsahující formátovaný popis a URL adresu obrázku s nahrazením "low" za "hi".
+        // 3. Aktualizuje průběh načítání voláním metody updateProgress na instanci znackyController.
+
         for (Element imgTag : imgTags) {
-            urlList.add(imgTag.attr("src"));
+            String description = imgTag.attr("alt").replace("Dopravní značka:", "").trim();
+            urlList.add(new String[]{formatText(description), imgTag.attr("src").replace("low", "hi")});
             // Aktualizace průběhu
             znackyController.updateProgress();
         }
@@ -98,11 +119,28 @@ public class ParserHTML {
 
 
     /**
+     * Formátuje vstupní text odstraněním mezer z části kódu a kombinací s popisem.
+     *
+     * @param input vstupní řetězec obsahující kód a popis oddělené mezerou
+     * @return formátovaný řetězec s kombinovaným kódem a popisem
+     */
+    public static String formatText(String input) {
+        // Rozdělení vstupního řetězce na kód a popis
+        String[] parts = input.split(" ", 2);
+        String code = parts[0].replace(" ", "");
+        String description = parts[1];
+
+        // Kombinace formátovaného kódu a popisu
+        return code + description;
+    }
+
+
+    /**
      * Metoda pro získání seznamu URL adres nalezených v &lt;img&gt; tagách.
      *
      * @return ObservableList obsahující URL adresy nalezené v &lt;img&gt; tagách.
      */
-    public ObservableList<String> getUrlList() {
+    public ObservableList<String[]> getUrlList() {
         return urlList;
     }
 }

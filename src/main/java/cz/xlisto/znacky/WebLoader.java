@@ -30,10 +30,19 @@ import java.io.InputStreamReader;
  * </ul>
  */
 public class WebLoader {
-
-    // Logger pro zaznamenávání chyb a informací během načítání webových stránek
+    /**
+     * Logger pro zaznamenávání chyb a informací během načítání webových stránek.
+     * <p>
+     * Tento logger je inicializován pomocí třídy LoggerFactory a je použit pro logování
+     * událostí a chyb v rámci třídy WebLoader.
+     */
     private static final Logger logger = LoggerFactory.getLogger(WebLoader.class);
-
+    /**
+     * Instance třídy ParserHTML pro parsování HTML obsahu.
+     * <p>
+     * Tato proměnná je inicializována v konstruktoru třídy WebLoader a je použita
+     * pro parsování HTML obsahu načteného z webových stránek.
+     */
     private final ParserHTML parser;
 
     /**
@@ -84,7 +93,6 @@ public class WebLoader {
             in.close();
 
             // Zavolání metody parseHTML s načteným obsahem stránky
-
             String nextUrl = parser.parseHTML(response.toString());
             if (nextUrl != null) {
                 loadWeb(nextUrl);
@@ -102,7 +110,7 @@ public class WebLoader {
      *
      * @return ObservableList obsahující URL adresy, které byly nalezeny parserem.
      */
-    public ObservableList<String> getUrlList() {
+    public ObservableList<String[]> getUrlList() {
         return parser.getUrlList();
     }
 }

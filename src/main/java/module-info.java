@@ -1,5 +1,5 @@
 /**
- * Modul cz.xlisto.znacky je hlavním modulem aplikace pro stahování dopravních značek.
+ * Modul cz.xlisto.znacky je hlavním modulem aplikace pro stahování obrázků dopravních značek.
  * <p>
  * Tento modul vyžaduje následující moduly:
  * <ul>

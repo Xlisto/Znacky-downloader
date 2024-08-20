@@ -42,7 +42,12 @@ import java.io.IOException;
  * </ul>
  */
 public class ZnackyController {
-    // Logger pro zaznamenávání chyb a informací během načítání webových stránek
+    /**
+     * Logger pro zaznamenávání chyb a informací během načítání webových stránek.
+     * <p>
+     * Tento logger je inicializován pomocí třídy LoggerFactory a je použit pro logování
+     * událostí a chyb v rámci třídy ZnackyController.
+     */
     private static final Logger logger = LoggerFactory.getLogger(ZnackyController.class);
     /**
      * ListView pro zobrazení nalezených URL adres.
@@ -51,12 +56,36 @@ public class ZnackyController {
      * nalezených na webové stránce s dopravními značkami.
      */
     @FXML
-    public ListView<String> listView;
+    public ListView<String[]> listView;
+    /**
+     * Label pro zobrazení uvítacího textu.
+     * <p>
+     * Tato komponenta je inicializována pomocí FXML a slouží k zobrazení uvítacího textu
+     * nebo stavu načítání obsahu webové stránky.
+     */
     @FXML
     private Label welcomeText;
+    /**
+     * Label pro zobrazení průběhu načítání.
+     * <p>
+     * Tato komponenta je inicializována pomocí FXML a slouží k zobrazení aktuálního stavu
+     * načítání obsahu webové stránky.
+     */
     @FXML
     private Label progress;
+    /**
+     * Instance třídy WebLoader pro načítání obsahu webové stránky.
+     * <p>
+     * Tato proměnná je použita k inicializaci a spuštění procesu načítání URL adres
+     * z webové stránky s dopravními značkami.
+     */
     private WebLoader webLoader;
+    /**
+     * URL adresa webové stránky s databází dopravních značek.
+     * <p>
+     * Tato proměnná obsahuje URL adresu, která je použita pro načítání obsahu
+     * webové stránky s dopravními značkami.
+     */
     private final String url = "http://www.celysvet.cz/test-znalosti-dopravnich-znacek-databaze";
 
     /**
@@ -143,6 +172,7 @@ public class ZnackyController {
                     loaderStage.close();
                     welcomeText.setText("Načítání dokončeno");
                     listView.setItems(webLoader.getUrlList());
+
                 });
             }
 
@@ -156,5 +186,18 @@ public class ZnackyController {
         };
 
         new Thread(task).start();
+    }
+
+    /**
+     * Inicializuje komponenty uživatelského rozhraní.
+     * <p>
+     * Tato metoda je volána automaticky po načtení FXML souboru a slouží k nastavení
+     * vlastností a chování komponent uživatelského rozhraní.
+     * <p>
+     * V tomto případě nastavuje továrnu buněk pro ListView na instanci CustomListCell.
+     */
+    @FXML
+    public void initialize() {
+        listView.setCellFactory(param -> new CustomListCell());
     }
 }
