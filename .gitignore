@@ -23,4 +23,5 @@ out/
 !**/src/test/**/out/
 
 /shelf/
+/doc/
 
