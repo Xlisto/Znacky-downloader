@@ -8,13 +8,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Třída ZnackyController slouží jako kontroler pro hlavní okno aplikace.
@@ -42,6 +44,8 @@ import java.io.IOException;
  * </ul>
  */
 public class ZnackyController {
+    private static final String SETTINGS_FILE = "settings.ini";
+    private static final String DIRECTORY_KEY = "defaultDirectory";
     /**
      * Logger pro zaznamenávání chyb a informací během načítání webových stránek.
      * <p>
@@ -186,6 +190,94 @@ public class ZnackyController {
         };
 
         new Thread(task).start();
+    }
+
+    /**
+     * Metoda pro zpracování události kliknutí na tlačítko pro výběr složky.
+     * <p>
+     * Tato metoda otevře dialogové okno pro výběr složky a nastaví výchozí složku
+     * na základě hodnoty uložené v souboru settings.ini. Pokud není výchozí složka
+     * nastavena, použije se uživatelská složka.
+     * <p>
+     * Po výběru složky se její cesta uloží do souboru settings.ini.
+     */
+    @FXML
+    protected void onSelectFolderButtonClick() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Vyberte složku");
+
+        // Načtení výchozí složky ze souboru settings.ini
+        File defaultDirectory = loadDefaultDirectory();
+        if (defaultDirectory != null && defaultDirectory.exists()) {
+            directoryChooser.setInitialDirectory(defaultDirectory);
+        } else {
+            // Nastavení výchozí složky na uživatelskou složku
+            File userDirectory = new File(System.getProperty("user.home"));
+            if (userDirectory.exists()) {
+                directoryChooser.setInitialDirectory(userDirectory);
+            }
+        }
+
+        // Získání reference na hlavní okno aplikace
+        Stage primaryStage = (Stage) welcomeText.getScene().getWindow();
+
+        // Zobrazení dialogového okna pro výběr složky
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+
+        if (selectedDirectory != null) {
+            // Zpracování vybrané složky (např. zobrazení cesty v konzoli)
+            System.out.println("Vybraná složka: " + selectedDirectory.getAbsolutePath());
+            // Uložení vybrané složky do souboru settings.ini
+            saveDefaultDirectory(selectedDirectory);
+        }
+    }
+
+    /**
+     * Načte výchozí složku z konfiguračního souboru settings.ini.
+     * <p>
+     * Tato metoda načte hodnotu klíče defaultDirectory ze souboru settings.ini
+     * a vrátí ji jako instanci třídy File. Pokud soubor settings.ini neexistuje
+     * nebo klíč defaultDirectory není nastaven, vrátí null.
+     *
+     * @return Výchozí složka jako instance třídy File nebo null, pokud není nastavena.
+     */
+    private File loadDefaultDirectory() {
+        Properties properties = new Properties();
+        File settingsFile = new File(SETTINGS_FILE);
+
+        // Zkontrolovat, zda soubor existuje
+        if (!settingsFile.exists()) {
+            return null;
+        }
+
+        try (InputStream input = new FileInputStream(settingsFile)) {
+            properties.load(input);
+            String directoryPath = properties.getProperty(DIRECTORY_KEY);
+            if (directoryPath != null) {
+                return new File(directoryPath);
+            }
+        } catch (IOException e) {
+            logger.error("Chyba při načítání souboru settings.ini {}", e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Uloží výchozí složku do konfiguračního souboru settings.ini.
+     * <p>
+     * Tato metoda uloží cestu k zadané složce jako hodnotu klíče defaultDirectory
+     * do souboru settings.ini.
+     *
+     * @param directory Složka, která má být uložena jako výchozí.
+     */
+    private void saveDefaultDirectory(File directory) {
+        Properties properties = new Properties();
+        properties.setProperty(DIRECTORY_KEY, directory.getAbsolutePath());
+        try (OutputStream output = new FileOutputStream(SETTINGS_FILE)) {
+            properties.store(output, null);
+        } catch (IOException e) {
+            logger.error("Chyba při ukládání souboru settings.ini {}", e.getMessage());
+        }
     }
 
     /**
