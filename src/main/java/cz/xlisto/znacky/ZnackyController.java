@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.DirectoryChooser;
@@ -44,7 +45,19 @@ import java.util.Properties;
  * </ul>
  */
 public class ZnackyController {
+    /**
+     * Název konfiguračního souboru pro ukládání výchozí složky.
+     * <p>
+     * Tato konstanta obsahuje název souboru, ve kterém jsou ukládány konfigurační
+     * informace pro aplikaci. Soubor je uložen v kořenovém adresáři aplikace.
+     */
     private static final String SETTINGS_FILE = "settings.ini";
+    /**
+     * Klíč pro ukládání výchozí složky do souboru settings.ini.
+     * <p>
+     * Tato konstanta obsahuje klíč, pod kterým je uložena cesta k výchozí složce
+     * do souboru settings.ini.
+     */
     private static final String DIRECTORY_KEY = "defaultDirectory";
     /**
      * Logger pro zaznamenávání chyb a informací během načítání webových stránek.
@@ -91,6 +104,14 @@ public class ZnackyController {
      * webové stránky s dopravními značkami.
      */
     private final String url = "http://www.celysvet.cz/test-znalosti-dopravnich-znacek-databaze";
+    /**
+     * Tlačítko pro uložení obrázků.
+     * <p>
+     * Tato komponenta je inicializována pomocí FXML a slouží k uložení obrázků
+     * z nalezených URL adres do výchozí složky.
+     */
+    @FXML
+    private Button saveButton;
 
     /**
      * Prázdný konstruktor třídy ZnackyController.
@@ -177,6 +198,10 @@ public class ZnackyController {
                     welcomeText.setText("Načítání dokončeno");
                     listView.setItems(webLoader.getUrlList());
 
+                    // Po úspěšném načtení seznamu odkazů aktivujte tlačítko "Ulož"
+                    if (!listView.getItems().isEmpty()) {
+                        saveButton.setDisable(false);
+                    }
                 });
             }
 
@@ -225,11 +250,21 @@ public class ZnackyController {
         File selectedDirectory = directoryChooser.showDialog(primaryStage);
 
         if (selectedDirectory != null) {
-            // Zpracování vybrané složky (např. zobrazení cesty v konzoli)
-            System.out.println("Vybraná složka: " + selectedDirectory.getAbsolutePath());
             // Uložení vybrané složky do souboru settings.ini
             saveDefaultDirectory(selectedDirectory);
         }
+    }
+
+    /**
+     * Metoda pro zpracování události kliknutí na tlačítko pro uložení obrázků.
+     * <p>
+     * Tato metoda vytvoří instanci třídy ImageSaver a zavolá její metodu saveImages
+     * s položkami z ListView. Uloží obrázky z nalezených URL adres do výchozí složky.
+     */
+    @FXML
+    protected void onSaveButtonClick() {
+        ImageSaver imageSaver = new ImageSaver();
+        imageSaver.saveImages(listView.getItems());
     }
 
     /**

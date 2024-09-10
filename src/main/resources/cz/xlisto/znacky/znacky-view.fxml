@@ -12,6 +12,8 @@
             text="Načti značky" textAlignment="RIGHT"/>
     <Button alignment="TOP_LEFT" contentDisplay="TOP" layoutX="120.0" layoutY="17.0" onAction="#onSelectFolderButtonClick"
             text="Vyber složku" textAlignment="RIGHT"/>
+    <Button alignment="TOP_LEFT" contentDisplay="TOP" layoutX="226.0" layoutY="17.0" onAction="#onSaveButtonClick"
+            text="Ulož" textAlignment="RIGHT" fx:id="saveButton" disable="true"/>
 
     <Label fx:id="welcomeText" layoutX="14.0"/>
     <ListView layoutX="14.0" layoutY="47.0" prefHeight="414.0" prefWidth="615.0" fx:id="listView"/>
